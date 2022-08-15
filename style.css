@@ -1,0 +1,65 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 550px;
+    display: flex;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+#board {
+    width: 450px;
+    height: 450px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tile {
+    width: 48px;
+    height: 48px;
+    border: 1px solid lightgray;
+
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.horizontal-line {
+    border-top: 1px solid black;
+}
+
+.vertical-line {
+    border-left: 1px solid black;
+}
+.tile-start {
+    background-color: whitesmoke;
+}
+.tile-solved {
+    font-weight: bolder;
+}
+
+#digits {
+    width: 50px;
+    height: 450px;
+    margin: 0 auto;
+}
+.number {
+    width: 48px;
+    height: 48px;
+    border: 1px solid black;
+
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-selected {
+    background-color: beige;
+}
+
+
