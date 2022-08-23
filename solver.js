@@ -1,22 +1,22 @@
-var board = [[0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0]];
+var board = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
-var oldBoard = [[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0]];
+var oldBoard = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
 var numSelected = null;
 var tileSelected = null;
@@ -26,11 +26,11 @@ var solved = false;
  * On load
  */
 
-window.onload = function() {
+window.onload = function () {
     createUI();
 }
 
-function createUI() { 
+function createUI() {
     //Digits 1-9
     for (let i = 1; i <= 9; i++) {
         let num = document.createElement("div");
@@ -66,7 +66,7 @@ function createUI() {
 
 }
 
-function selectNum() { 
+function selectNum() {
     if (numSelected != null) numSelected.classList.remove("number-selected");
     numSelected = this;
     numSelected.classList.add("number-selected");
@@ -82,13 +82,13 @@ function selectTile() {
         else {
             this.innerText = numSelected.innerText;
             this.classList.add("tile-start");
-        }     
-    } 
+        }
+    }
 
 }
 
 function clear() {
-    for (let i = 0; i < 9; i++) { 
+    for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             let tile = document.getElementById(i + "-" + j);
             tile.innerText = "";
@@ -101,8 +101,26 @@ function clear() {
 }
 
 function solve() {
+    if (!isValidBoard()) {
+        window.alert("Please enter a valid board");
+        return;
+    }
 
-    for (let i = 0; i < 9; i++) { 
+    solveBoard();
+    console.log(oldBoard);
+    console.log(board);
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            let tile = document.getElementById(i + "-" + j);
+            tile.innerText = board[i][j];
+            if (oldBoard[i][j] != board[i][j]) tile.classList.add("tile-solved");
+        }
+    }
+
+}
+
+function generateBoard() {
+    for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             let tile = document.getElementById(i + "-" + j);
             if (tile.innerText != "") {
@@ -111,17 +129,6 @@ function solve() {
             }
         }
     }
-    solveBoard();
-    console.log(oldBoard);
-    console.log(board);
-    for (let i = 0; i < 9; i++) { 
-        for (let j = 0; j < 9; j++) {
-            let tile = document.getElementById(i + "-" + j);
-            tile.innerText = board[i][j];
-            if (oldBoard[i][j] != board[i][j]) tile.classList.add("tile-solved");
-        }
-    }
-
 }
 /**
  * Algorithm 
@@ -162,7 +169,7 @@ function solveBoard() {
                 for (let num = 1; num <= 9; num++) {
                     if (possiblePlacement(row, column, num)) {
                         board[row][column] = num;
-                        
+
                         if (solveBoard()) return true;
                         else board[row][column] = 0;
                     }
@@ -174,7 +181,40 @@ function solveBoard() {
     return true;
 }
 
-    
+function testValid() {
+    console.log(isValidBoard());
+}
+
+function isValidBoard() {
+    generateBoard();
+    for (let i = 0; i < 9; i++) {
+        let row = new Set(),
+            col = new Set(),
+            box = new Set();
+
+        for (let j = 0; j < 9; j++) {
+            let _row = board[i][j];
+            let _col = board[j][i];
+            let _box = board[3 * Math.floor(i / 3) + Math.floor(j / 3)][3 * (i % 3) + (j % 3)];
+
+            if (_row != 0) {
+                if (row.has(_row)) return false;
+                row.add(_row);
+            }
+            if (_col != 0) {
+                if (col.has(_col)) return false;
+                col.add(_col);
+            }
+
+            if (_box != 0) {
+                if (box.has(_box)) return false;
+                box.add(_box);
+            }
+        }
+    }
+    return true;
+}
+
 function printBoard(board) {
     let output = "";
     for (let i = 0; i < 9; i++) {
